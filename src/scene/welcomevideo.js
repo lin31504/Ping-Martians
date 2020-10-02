@@ -11,7 +11,6 @@ var SceneWelcomeVideo = new Phaser.Class({
 
 	preload: function ()
 	{
-		this.load.setBaseURL('http://127.0.0.1:8000');
 		this.load.video('space', 'assets/video/video1.mp4')//.on('complete', () => {console.log('load complate')});
 	},
 

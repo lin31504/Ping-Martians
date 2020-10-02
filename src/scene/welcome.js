@@ -11,8 +11,6 @@ var SceneWelcome = new Phaser.Class({
 
 	preload: function ()
 	{
-		this.load.setBaseURL('http://127.0.0.1:8000');
-
 		this.load.image('logo', 'assets/logo.png');
 		this.load.image('button', 'assets/button.png');
 	},
