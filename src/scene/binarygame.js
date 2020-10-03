@@ -11,7 +11,7 @@ var SceneBinaryGame = new Phaser.Class({
 
 	preload: function ()
 	{
-		this.load.image('bg', 'assets/bg_gameA.png');
+		this.load.image('bg_gameA', 'assets/bg_gameA.png');
 		this.load.image('button0', 'assets/button0.png');
 		this.load.image('button1', 'assets/button1.png');
 		this.load.image('buttonClear', 'assets/button_clear.png');
@@ -20,7 +20,8 @@ var SceneBinaryGame = new Phaser.Class({
 
 	create: function ()
 	{
-		var bg = this.add.image(0, 0, 'bg').setOrigin(0).setScale(0.711);
+		var bbg_gameAgg = this.add.image(0, 0, 'bg_gameA').setOrigin(0).setScale(0.711);
+		
 		if (localStorage.getItem("inputVal") == null){
 			inputVal = "> ";	//first played, init
 		}
@@ -28,15 +29,21 @@ var SceneBinaryGame = new Phaser.Class({
 			var inputVal = localStorage.getItem("inputVal");
 		}
 
+		var btnExit = this.add.rectangle(1280, 55, 20, 20, 0xff0000, 0.5);
 		var btn0 = this.add.image(650, 250, 'button0').setScale(0.5);
 		var btn1 = this.add.image(750, 250, 'button1').setScale(0.5);
 		var btnC = this.add.image(1150, 700, 'buttonClear').setScale(0.3);
 		var btnS = this.add.image(1200, 700, 'buttonSend').setScale(0.3);
+
 		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
 		var systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
 		for(obj of sentMSG){
 			systemLogText.setText(systemLogText.text+obj.MSG+"\t\tETA: "+obj.ETA+"\n");
 		}
+
+		btnExit.on('pointerdown', function (event) {
+			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
+		}, this);
 
 		btn0.on('pointerdown', function (event) {
             inputVal += "0";
@@ -67,6 +74,7 @@ var SceneBinaryGame = new Phaser.Class({
 			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
+		btnExit.setInteractive({ cursor: 'pointer' })
 		btn0.setInteractive({ cursor: 'pointer' })
 		btn1.setInteractive({ cursor: 'pointer' })
 		btnC.setInteractive({ cursor: 'pointer' })
