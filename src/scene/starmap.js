@@ -10,6 +10,7 @@ var StarmapDATA = {
 		angvel: 0.5315,
 		theta: 0,
 		spinRate:355.23,
+		angoffset:0,
 	},
 	sun:{
 		obj: 0,
@@ -17,31 +18,37 @@ var StarmapDATA = {
 		y: 0,
 		r: 0,
 		spinRate:14.9,
+		angoffset:0,
 	},
 	earth:{
 		obj: 0,
 		x: 0,
 		y: 0,
 		r: 1,
-		angvel: 0.5315,
-		theta: 0,
-		spinRate:1,
-	},
-	earth:{
-		obj: 0,
-		x: 0,
-		y: 0,
-		r: 1,
-		angvel: 0.5315,
+		angvel: 1,
 		theta: 0,
 		spinRate:365,
+		angoffset:0,
+	},
+
+	base:{
+		obj: 0,
+		x: 0,
+		y: 0,
+		r: 0.1,
+		angvel: 355.23,
+		theta: 0,
+		spinRate:355.23,
+		angoffset:70,
+		// spinRate:355.23,
 	},
 
 	epochStart:1600000000000,
 	epochdt: 2, //ms
 	planet_timescale: 0.00007,
+	// planet_timescale: 0.0007,
 	au2screen: 200,
-	deg2rad: 0.17444,
+	deg2rad: 0.017444,
 
 	timeString: 0,
 	timeText: 0,
@@ -64,6 +71,7 @@ var SceneStarmap = new Phaser.Class({
 		this.load.image('sun', 'assets/sun.png');
 		this.load.image('mars', 'assets/mars.webp');
 		this.load.image('earth', 'assets/earth.png');
+		this.load.image('base', 'assets/base.png');
 	},
 
 	create: function ()
@@ -107,21 +115,26 @@ var SceneStarmap = new Phaser.Class({
 	    var distanceString = "E-M Distance: " + StarmapDATA.EMdistance + " AU";
 		distanceText = this.add.text(screenButtomX, screenButtomY+50, distanceString, style).setOrigin(0.5);	    
 
-
+		//print sun
 	    StarmapDATA.sun.x = screenCenterX;
 	    StarmapDATA.sun.y = screenCenterY;
 	   	StarmapDATA.sun.obj = this.add.sprite(StarmapDATA.sun.x, StarmapDATA.sun.y, 'sun');
 	   	StarmapDATA.sun.obj.setScale(0.07,0.07);
-
+	   	//print earth
 	   	StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
 	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
 	   	StarmapDATA.earth.obj = this.add.sprite(StarmapDATA.earth.x, StarmapDATA.earth.y, 'earth');
 	   	StarmapDATA.earth.obj.setScale(0.05,0.05);
-
+	   	//print mars
 	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
 	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
 	   	StarmapDATA.mars.obj = this.add.sprite(StarmapDATA.mars.x, StarmapDATA.mars.y, 'mars');
 	   	StarmapDATA.mars.obj.setScale(0.02,0.02);
+	   	//print base
+	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.obj = this.add.sprite(StarmapDATA.base.x, StarmapDATA.base.y, 'base');
+	   	StarmapDATA.base.obj.setScale(0.07,0.07);
 
 	    // var timer = this.time.create();
 	    // timer.repeat(1 * Phaser.Timer.SECOND, 7200, updateTime, this);
@@ -145,7 +158,13 @@ var SceneStarmap = new Phaser.Class({
 
 	   	StarmapDATA.mars.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.mars.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
-	   		StarmapDATA.sun.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.sun.spinRate * StarmapDATA.planet_timescale; //counter clock wise
+
+	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+
+	   	StarmapDATA.base.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.base.spinRate * StarmapDATA.planet_timescale - StarmapDATA.base.angoffset; //counter clock wise
+
+	   	StarmapDATA.sun.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.sun.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
 	   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.mars.obj);
 	   	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
@@ -190,6 +209,8 @@ var SceneStarmap = new Phaser.Class({
 	   	StarmapDATA.earth.obj.y = StarmapDATA.earth.y;
 	   	StarmapDATA.mars.obj.x = StarmapDATA.mars.x;
 	   	StarmapDATA.mars.obj.y = StarmapDATA.mars.y;
+	   	StarmapDATA.base.obj.x = StarmapDATA.base.x;
+	   	StarmapDATA.base.obj.y = StarmapDATA.base.y;
 	}
 
 });
