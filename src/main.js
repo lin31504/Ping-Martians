@@ -10,6 +10,9 @@ var config = {
 		}
 	},
 	scene: [SceneWelcome, SceneWelcomeVideo, SceneBinaryGame, SceneStarmap]
+
+	//Custum Global DATA
+	
 };
 
 var game = new Phaser.Game(config);
