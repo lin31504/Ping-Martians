@@ -22,15 +22,12 @@ var SceneStoryA1 = new Phaser.Class({
 
 		machine1.on('pointerdown', function (event) {
            this.scene.transition({ target: 'sceneMachine1', duration: 0});
-		   console.log("machine1");
 		}, this);
         machine2.on('pointerdown', function (event) {
 			this.scene.transition({ target: 'sceneMachine2', duration: 0});
-			console.log("machine2");
 		}, this);
 		machine3.on('pointerdown', function (event) {
 			this.scene.transition({ target: 'sceneMachine3', duration: 0});
-			console.log("machine3");
 		}, this);
 		machine1.setInteractive({ cursor: 'pointer' })
 		machine2.setInteractive({ cursor: 'pointer' })
