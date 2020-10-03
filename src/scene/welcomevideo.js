@@ -21,7 +21,7 @@ var SceneWelcomeVideo = new Phaser.Class({
 		video.play(true);
 		this.tweens.add({'targets': t, 'y': -500, 'duration': 8000}).on('complete', () => {
 			video.destroy();
-			this.scene.transition({ target: 'sceneBinaryGame', duration: 0});
+			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
 			});
 		
 	}
