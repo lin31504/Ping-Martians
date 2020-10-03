@@ -1,8 +1,8 @@
 var config = {
 	type: Phaser.AUTO,
 	autoCenter: Phaser.Scale.CENTER_BOTH,
-	width: 1400,
-	height: 700,
+	width: 1366,
+	height: 768,
 	physics: {
 		default: 'arcade',
 		arcade: {

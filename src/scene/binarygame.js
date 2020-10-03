@@ -11,6 +11,7 @@ var SceneBinaryGame = new Phaser.Class({
 
 	preload: function ()
 	{
+		this.load.image('bg', 'assets/bg_gameA.png');
 		this.load.image('button0', 'assets/button0.png');
 		this.load.image('button1', 'assets/button1.png');
 		this.load.image('buttonClear', 'assets/button_clear.png');
@@ -19,6 +20,7 @@ var SceneBinaryGame = new Phaser.Class({
 
 	create: function ()
 	{
+		var bg = this.add.image(0, 0, 'bg').setOrigin(0).setScale(0.711);
 		if (localStorage.getItem("inputVal") == null){
 			inputVal = "> ";	//first played, init
 		}
@@ -26,11 +28,11 @@ var SceneBinaryGame = new Phaser.Class({
 			var inputVal = localStorage.getItem("inputVal");
 		}
 
-		var btn0 = this.add.image(400, 600, 'button0');
-		var btn1 = this.add.image(1000, 600, 'button1');
-		var btnC = this.add.image(700, 600, 'buttonClear');
-		var btnS = this.add.image(700, 400, 'buttonSend');
-		var Text2Send = this.add.text(700, 200, inputVal,{'backgroundColor':'#0f0', 'fontSize': '40px', 'color': '#00f'});
+		var btn0 = this.add.image(650, 250, 'button0').setScale(0.5);
+		var btn1 = this.add.image(750, 250, 'button1').setScale(0.5);
+		var btnC = this.add.image(1150, 700, 'buttonClear').setScale(0.3);
+		var btnS = this.add.image(1200, 700, 'buttonSend').setScale(0.3);
+		var Text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
 
 		btn0.on('pointerdown', function (event) {
             inputVal += "0";
