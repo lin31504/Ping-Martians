@@ -1,18 +1,18 @@
 var replacer = (key, value) => {  
-  // if we get a function give us the code for that function  
-  if (typeof value === 'function') {
-    return value.toString();  
-  }   
-  return value;
+	// if we get a function give us the code for that function  
+	if (typeof value === 'function') {
+		return value.toString();  
+	}   
+	return value;
 } 
 
 let reviver = (key, value) => {  
-  if (typeof value === 'string' 
-      && value.indexOf('function') === 0) {    
-    let functionTemplate = `(${value}).call(this)`;    
-    return new Function(functionTemplate);  
-  }  
-  return value;
+	if (typeof value === 'string' 
+		&& value.indexOf('function') === 0) {    
+		let functionTemplate = `(${value}).call(this)`;    
+		return new Function(functionTemplate);  
+	}  
+	return value;
 };
 
 // init global timer
@@ -27,14 +27,14 @@ var gtc = {
 	get: (name) => {return globalTimer.filter((data)=>{return data.name == name});},
 	remove: (index) => {r = globalTimer.splice(index, 1); gtc.save(); return r;},
 	list: () => {return globalTimer;},
-	save: () => {localStorage.setItem("globalTimer", JSON.stringify(globalTimer, replacer));}
-}
-
-setInterval(()=>{
-	for (i in globalTimer){
-		if (globalTimer[i].timestamp + globalTimer[i].delay <= new Date().getTime()){
-			globalTimer[i].cb(globalTimer[i].data)
-			gtc.remove(i)
+	save: () => {localStorage.setItem("globalTimer", JSON.stringify(globalTimer, replacer));},
+	tick: () => {
+		for (i in globalTimer){
+			if (globalTimer[i].timestamp + globalTimer[i].delay <= new Date().getTime()){
+				globalTimer[i].cb(globalTimer[i].data);
+				gtc.remove(i);
+			}
 		}
 	}
-}, 1000);
+}
+setInterval(gtc.tick, 1000);
