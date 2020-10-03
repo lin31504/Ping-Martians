@@ -23,7 +23,7 @@ var SceneWelcome = new Phaser.Class({
 		var hint = this.add.image(900, 600, 'hint');
 		var btn = this.add.rectangle(680, 620, 180, 200, 0xff0000, 0.0);
 		hint.setAlpha(0)
-		this.tweens.add({'targets': bg, 'y': -690, 'duration': 5000});
+		this.tweens.add({'targets': bg, 'y': -690, 'duration': 5000}).on('complete', () => {btn.setInteractive({ cursor: 'pointer' });});
 		this.tweens.add({'targets': logo, 'y': 250, 'duration': 4000});
 		this.tweens.add({'targets': hint, 'alpha': 1, 'duration': 15000});
 		btn.once('pointerdown', function (event) {
@@ -31,7 +31,6 @@ var SceneWelcome = new Phaser.Class({
 			this.tweens.add({targets: bg, 'scale': 1.3, 'x': -560, 'y': -1900, 'alpha': 0,'duration': 6000}).on('complete', () => {this.scene.transition({ target: 'sceneWelcomeVideo', duration: 0})})
 			this.tweens.add({'targets': [logo, hint], 'alpha': 0, 'duration': 1000});
 		}, this);
-		btn.setInteractive({ cursor: 'pointer' })
 	}
 
 });
