@@ -1,3 +1,5 @@
+var systemLogText;
+
 var SceneBinaryGame = new Phaser.Class({
 
 	Extends: Phaser.Scene,
@@ -20,6 +22,16 @@ var SceneBinaryGame = new Phaser.Class({
 
 	create: function ()
 	{
+
+		//Setting Update Timer
+	    var timer = this.time.addEvent({
+		    delay: 500,                // ms
+		    callback: this.updateSystemLog,
+		    //args: [],
+		    callbackScope: this,
+		    loop: true
+		});
+
 		var bbg_gameAgg = this.add.image(0, 0, 'bg_gameA').setOrigin(0).setScale(0.711);
 		
 		if (localStorage.getItem("inputVal") == null){
@@ -36,13 +48,9 @@ var SceneBinaryGame = new Phaser.Class({
 		var btnS = this.add.image(1200, 700, 'buttonSend').setScale(0.3);
 
 		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
-		var systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
-		var obj;
-		for(obj of gtc.list()){
-			var ETA = toString((obj.timestamp + obj.delay - new Date().getTime())/1000);
-			systemLogText.setText(systemLogText.text+obj.name+"\t\tETA: "+ETA+"\n");
-		}
+		systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
 
+		// event handles
 		btnExit.on('pointerdown', function (event) {
 			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
 		}, this);
@@ -66,10 +74,8 @@ var SceneBinaryGame = new Phaser.Class({
 			gtc.add('gameA', 10000, inputVal, function(data){if(data == "> 011"){console.log('success');}else{console.log('fail');}})
 
 			systemLogText.setText("");
-			var obj;
 			for(obj of gtc.list()){
-				
-				var ETA = (obj.timestamp + obj.delay - new Date().getTime())/1000;
+				var ETA = Math.round((obj.timestamp + obj.delay - new Date().getTime())/1000);
 				systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
 			}
 
@@ -77,11 +83,20 @@ var SceneBinaryGame = new Phaser.Class({
 			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
-		btnExit.setInteractive({ cursor: 'pointer' })
-		btn0.setInteractive({ cursor: 'pointer' })
-		btn1.setInteractive({ cursor: 'pointer' })
-		btnC.setInteractive({ cursor: 'pointer' })
-		btnS.setInteractive({ cursor: 'pointer' })
+		btnExit.setInteractive({ cursor: 'pointer' });
+		btn0.setInteractive({ cursor: 'pointer' });
+		btn1.setInteractive({ cursor: 'pointer' });
+		btnC.setInteractive({ cursor: 'pointer' });
+		btnS.setInteractive({ cursor: 'pointer' });
+	},
+
+	updateSystemLog: function ()
+	{
+		systemLogText.setText("");
+		for(obj of gtc.list()){
+			var ETA = Math.round((obj.timestamp + obj.delay - new Date().getTime())/1000);
+			systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
+		}
 	}
 
 });
