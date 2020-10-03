@@ -1,5 +1,6 @@
 var StarmapDATA = {
 	EMdistance: 0,
+	au2lightsec: 499,
 
 	//By Kepler Law w^2 * R^3 = const
 	mars:{
@@ -54,6 +55,42 @@ var StarmapDATA = {
 	timeText: 0,
 	distanceText:0
 };
+
+var CalcRemainTime = () => {  
+	var time = new Date();
+	var epochms = Math.round(time.getTime());
+	// StarmapDATA
+	StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.earth.angvel));
+   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.earth.angvel));
+
+   	//StarmapDATA.earth.obj.angle -= StarmapDATA.earth.spinRate;
+   	StarmapDATA.earth.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.earth.spinRate * StarmapDATA.planet_timescale; //counter clock wise
+
+   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.mars.angvel));
+   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.mars.angvel));
+
+   	StarmapDATA.mars.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.mars.spinRate * StarmapDATA.planet_timescale; //counter clock wise
+
+
+   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.base.angvel));
+   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.base.angvel));
+
+   	StarmapDATA.base.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.base.spinRate * StarmapDATA.planet_timescale - StarmapDATA.base.angoffset; //counter clock wise
+
+   	StarmapDATA.sun.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.sun.spinRate * StarmapDATA.planet_timescale; //counter clock wise
+
+   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.mars.obj);
+   	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
+
+	return 2*StarmapDATA.EMdistance * StarmapDATA.au2lightsec;
+};
+
+var epoch2rad = (epochtime,angvel) => {
+	var theta =  (-1)*(epochtime - StarmapDATA.epochStart) * angvel * StarmapDATA.planet_timescale; //counter clock wise
+	return theta * StarmapDATA.deg2rad;
+};
+
+
 var SceneStarmap = new Phaser.Class({
 
 
@@ -121,18 +158,18 @@ var SceneStarmap = new Phaser.Class({
 	   	StarmapDATA.sun.obj = this.add.sprite(StarmapDATA.sun.x, StarmapDATA.sun.y, 'sun');
 	   	StarmapDATA.sun.obj.setScale(0.07,0.07);
 	   	//print earth
-	   	StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
-	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
+	   	StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.earth.angvel));
+	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.earth.angvel));
 	   	StarmapDATA.earth.obj = this.add.sprite(StarmapDATA.earth.x, StarmapDATA.earth.y, 'earth');
 	   	StarmapDATA.earth.obj.setScale(0.05,0.05);
 	   	//print mars
-	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
-	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
+	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.mars.angvel));
+	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.mars.angvel));
 	   	StarmapDATA.mars.obj = this.add.sprite(StarmapDATA.mars.x, StarmapDATA.mars.y, 'mars');
 	   	StarmapDATA.mars.obj.setScale(0.02,0.02);
 	   	//print base
-	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.base.angvel));
-	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.base.angvel));
 	   	StarmapDATA.base.obj = this.add.sprite(StarmapDATA.base.x, StarmapDATA.base.y, 'base');
 	   	StarmapDATA.base.obj.setScale(0.07,0.07);
 
@@ -147,20 +184,20 @@ var SceneStarmap = new Phaser.Class({
 	    var time = new Date();
 		var epochms = Math.round(time.getTime());
   		// StarmapDATA
-  		StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
-	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
+  		StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.earth.angvel));
+	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.earth.angvel));
 
 	   	//StarmapDATA.earth.obj.angle -= StarmapDATA.earth.spinRate;
 	   	StarmapDATA.earth.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.earth.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
-	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
-	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
+	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.mars.angvel));
+	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.mars.angvel));
 
 	   	StarmapDATA.mars.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.mars.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
 
-	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.base.angvel));
-	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.x = StarmapDATA.mars.x + StarmapDATA.base.r * StarmapDATA.au2screen * Math.cos(epoch2rad(epochms,StarmapDATA.base.angvel));
+	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.base.angvel));
 
 	   	StarmapDATA.base.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.base.spinRate * StarmapDATA.planet_timescale - StarmapDATA.base.angoffset; //counter clock wise
 
@@ -192,7 +229,7 @@ var SceneStarmap = new Phaser.Class({
 
 	    timeText.setText(timeString);
 	    // console.log(StarmapDATA.earth.obj.angle);
-
+	    console.log(CalcRemainTime());
 	    // var remainAngle = Math.angle.Between(0,1,1,0);
 	    // var sprite = game.add.sprite(0, 1);
      //    var sprite2 = game.add.sprite(1, 0);
@@ -201,12 +238,6 @@ var SceneStarmap = new Phaser.Class({
 	    // console.log(remainAngle);
 	    // console.log(epochsec);
 	    // console.log(StarmapDATA.sunx);
-	},
-
-	epoch2rad: function (epochtime,angvel)
-	{
-		var theta =  (-1)*(epochtime - StarmapDATA.epochStart) * angvel * StarmapDATA.planet_timescale; //counter clock wise
-		return theta * StarmapDATA.deg2rad;
 	},
 
 	update: function() {
