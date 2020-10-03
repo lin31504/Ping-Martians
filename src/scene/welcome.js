@@ -23,9 +23,10 @@ var SceneWelcome = new Phaser.Class({
 		btn.setAlpha(0.1)
 		this.tweens.add({'targets': btn, 'alpha': 1, 'duration': 2000});
 		btn.once('pointerdown', function (event) {
-			//this.scene.transition({ target: 'sceneWelcomeVideo', duration: 0});
+			// this.scene.transition({ target: 'sceneWelcomeVideo', duration: 0});
 			// this.scene.transition({ target: 'sceneStoryA1', duration: 0});
-			console.log(CalcRemainTime());
+			this.scene.transition({ target: 'sceneStarmap', duration: 0});
+			// console.log(CalcRemainTime());
 		}, this);
 		btn.setInteractive({ cursor: 'pointer' })
 	}

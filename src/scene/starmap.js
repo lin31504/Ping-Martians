@@ -47,7 +47,7 @@ var StarmapDATA = {
 	epochStart:1600000000000,
 	epochdt: 2, //ms
 	planet_timescale: 0.00007,
-	// planet_timescale: 0.0007,
+	// planet_timescale: 0.007,
 	au2screen: 200,
 	deg2rad: 0.017444,
 
@@ -82,7 +82,28 @@ var CalcRemainTime = () => {
    	StarmapDATA.EMdistance = distanceofpoints(StarmapDATA.earth,StarmapDATA.mars);
    	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
 
-	return 2*StarmapDATA.EMdistance * StarmapDATA.au2lightsec;
+   	if(angleofpoints(StarmapDATA.sun,StarmapDATA.mars,StarmapDATA.earth) <= 150 && angleofpoints(StarmapDATA.mars,StarmapDATA.earth,StarmapDATA.base) <= 150)
+		return 2*StarmapDATA.EMdistance * StarmapDATA.au2lightsec;
+	else
+		return 0;
+};
+
+var angleofpoints = (objA,objB,objC) => {
+	var v1x = objB.x-objA.x;
+	var v1y = objB.y-objA.y;
+	var v2x = objC.x-objA.x;
+	var v2y = objC.y-objA.y;
+	var cosx = (v1x*v2x+v1y*v2y)/Math.sqrt(v1x*v1x+v1y*v1y)/Math.sqrt(v2x*v2x+v2y*v2y);
+
+	return Math.round(100*Math.acos(cosx)*180/3.14)/100;
+};
+
+var distanceofpoints2line = (objA,objB,objC) => {
+	var a = (objA.x-objB.x)/(objB.y-objA.y);
+	var b = -a*objA.y-objB.x;
+	var d = Math.abs(objC.x+a*objC.y+b)/Math.sqrt(a*a+b*b);
+
+	return Math.sqrt((objA.x-objB.x)*(objA.x-objB.x)+(objA.y-objB.y)*(objA.y-objB.y))
 };
 
 var distanceofpoints = (objA,objB) => {
@@ -207,7 +228,7 @@ var SceneStarmap = new Phaser.Class({
 
 	   	StarmapDATA.sun.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.sun.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
-	   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.mars.obj);
+	   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.base.obj);
 	   	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
 
 	   	//Update Distance
@@ -233,7 +254,9 @@ var SceneStarmap = new Phaser.Class({
 
 	    timeText.setText(timeString);
 	    // console.log(StarmapDATA.earth.obj.angle);
-	    console.log(CalcRemainTime());
+	    // console.log(callbackcRemainTime());
+	    // console.log(angleofpoints(StarmapDATA.sun,StarmapDATA.mars,StarmapDATA.earth));
+	    console.log(angleofpoints(StarmapDATA.mars,StarmapDATA.earth,StarmapDATA.base));
 	    // var remainAngle = Math.angle.Between(0,1,1,0);
 	    // var sprite = game.add.sprite(0, 1);
      //    var sprite2 = game.add.sprite(1, 0);
