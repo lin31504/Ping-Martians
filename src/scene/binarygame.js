@@ -25,12 +25,12 @@ var SceneBinaryGame = new Phaser.Class({
 		btn0.on('pointerdown', function (event) {
             inputVal += "0";
 			Text2Send.setText(inputVal);
-			console.log(inputVal);
+			// console.log(inputVal);
 		}, this);
         btn1.on('pointerdown', function (event) {
 			inputVal += "1";
 			Text2Send.setText(inputVal);
-			console.log(inputVal);			
+			// console.log(inputVal);			
 		}, this);
 		btn0.setInteractive({ cursor: 'pointer' })
 		btn1.setInteractive({ cursor: 'pointer' })
