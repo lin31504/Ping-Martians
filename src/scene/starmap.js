@@ -1,5 +1,5 @@
 var StarmapDATA = {
-	EMdistance: 0;
+	EMdistance: 0,
 
 	//By Kepler Law w^2 * R^3 = const
 	mars:{
@@ -33,6 +33,7 @@ var StarmapDATA = {
 
 	timeString: 0,
 	timeText: 0,
+	distanceText:0
 };
 var SceneStarmap = new Phaser.Class({
 
@@ -60,6 +61,15 @@ var SceneStarmap = new Phaser.Class({
 		const screenButtomX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
 		const screenButtomY = this.cameras.main.worldView.y + 100;
 		
+		//Setting Update Timer
+	    var timer = this.time.addEvent({
+		    delay: StarmapDATA.epochdt,                // ms
+		    callback: this.updateStarmap,
+		    //args: [],
+		    callbackScope: this,
+		    loop: true
+		});
+
 		//Show Time
 		var time = new Date();
 		var epochms = Math.round(time.getTime());
@@ -77,19 +87,14 @@ var SceneStarmap = new Phaser.Class({
 	        seconds = "0" + seconds;
 	    }
 	    
+	    var style = { fill : "#FFFFFF" };
+
 	    timeString = hours + ":" + minutes + ":" + seconds;
+	    timeText = this.add.text(screenButtomX, screenButtomY, timeString, style).setOrigin(0.5);
 
-		var style = { fill : "#FFFFFF" };
-	    timeText = this.add.text(screenButtomX, screenButtomY, timeString, style).setOrigin(0.5);;
+	    var distanceString = "E-M Distance: " + StarmapDATA.EMdistance + " AU";
+		distanceText = this.add.text(screenButtomX, screenButtomY+50, distanceString, style).setOrigin(0.5);	    
 
-	    //Setting Update Timer
-	    var timer = this.time.addEvent({
-		    delay: StarmapDATA.epochdt,                // ms
-		    callback: this.updateStarmap,
-		    //args: [],
-		    callbackScope: this,
-		    loop: true
-		});
 
 	    StarmapDATA.sun.x = screenCenterX;
 	    StarmapDATA.sun.y = screenCenterY;
@@ -119,18 +124,17 @@ var SceneStarmap = new Phaser.Class({
   		// StarmapDATA
   		StarmapDATA.earth.x = StarmapDATA.sun.x + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
 	   	StarmapDATA.earth.y = StarmapDATA.sun.y + StarmapDATA.earth.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.earth.angvel));
-	   	// this.physics.arcade.moveToXY(earth,StarmapDATA.earth.x,StarmapDATA.earth.y);
-
-	   	//StarmapDATA.earth.obj.x = StarmapDATA.earth.x;
-	   	//StarmapDATA.earth.obj.y = StarmapDATA.earth.y;
-	   	// this.earth.set
 
 	   	StarmapDATA.mars.x = StarmapDATA.sun.x + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.cos(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
 	   	StarmapDATA.mars.y = StarmapDATA.sun.y + StarmapDATA.mars.r * StarmapDATA.au2screen * Math.sin(this.epoch2rad(epochms,StarmapDATA.mars.angvel));
-	   	//StarmapDATA.mars.obj.x = StarmapDATA.mars.x;
-	   	//StarmapDATA.mars.obj.y = StarmapDATA.mars.y;
-	   	// game.debug.spriteInfo(earth, StarmapDATA.earth.x,StarmapDATA.earth.y);
-    	// this.spriteInfo(mars, StarmapDATA.mars.x,StarmapDATA.mars.y);
+	   	
+	   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.mars.obj);
+	   	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
+
+	   	//Update Distance
+	   	var distanceString = "E-M Distance: " + StarmapDATA.EMdistance + " AU";
+		distanceText.setText(distanceString);
+
 	    //Update MTC
 	    var hours = time.getHours();
 	    var minutes = time.getMinutes();
