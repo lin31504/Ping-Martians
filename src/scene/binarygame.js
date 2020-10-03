@@ -37,8 +37,10 @@ var SceneBinaryGame = new Phaser.Class({
 
 		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
 		var systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
-		for(obj of sentMSG){
-			systemLogText.setText(systemLogText.text+obj.MSG+"\t\tETA: "+obj.ETA+"\n");
+		var obj;
+		for(obj of gtc.list()){
+			var ETA = toString((obj.timestamp + obj.delay - new Date().getTime())/1000);
+			systemLogText.setText(systemLogText.text+obj.name+"\t\tETA: "+ETA+"\n");
 		}
 
 		btnExit.on('pointerdown', function (event) {
@@ -61,13 +63,14 @@ var SceneBinaryGame = new Phaser.Class({
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
 		btnS.on('pointerdown', function (event) {
-			sentMSG.push({MSG:inputVal, ETA:2000});
-			localStorage.setItem("sentMSG", JSON.stringify(sentMSG));
+			gtc.add('gameA', 10000, inputVal, function(data){if(data == "> 011"){console.log('success');}else{console.log('fail');}})
 
 			systemLogText.setText("");
 			var obj;
-			for(obj of sentMSG){
-				systemLogText.setText(systemLogText.text+obj.MSG+"\t\tETA: "+obj.ETA+"\n");
+			for(obj of gtc.list()){
+				
+				var ETA = (obj.timestamp + obj.delay - new Date().getTime())/1000;
+				systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
 			}
 
 			inputVal = "> ";
