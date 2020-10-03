@@ -24,7 +24,7 @@ var SceneWelcome = new Phaser.Class({
 		this.tweens.add({'targets': btn, 'alpha': 1, 'duration': 2000});
 		btn.once('pointerdown', function (event) {
 			//this.scene.transition({ target: 'sceneWelcomeVideo', duration: 0});
-			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
+			this.scene.transition({ target: 'sceneBinaryGame', duration: 0});
 		}, this);
 		btn.setInteractive({ cursor: 'pointer' })
 	}
