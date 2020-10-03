@@ -23,19 +23,18 @@ if (localStorage.getItem("globalTimer") != null){
 }
 
 var gtc = {
-	add: (name, cb) => {globalTimer.push({'timestamp': new Date().getTime(), 'name': name, 'cb': cb}); gtc.save();},
+	add: (name, delay, data, cb) => {globalTimer.push({'timestamp': new Date().getTime(), 'delay': delay, 'name': name, 'data': data, 'cb': cb}); gtc.save();},
 	get: (name) => {return globalTimer.filter((data)=>{return data.name == name});},
-	pop: (index) => {r = globalTimer.pop(index); gtc.save(); return r;},
+	remove: (index) => {r = globalTimer.splice(index, 1); gtc.save(); return r;},
 	list: () => {return globalTimer;},
 	save: () => {localStorage.setItem("globalTimer", JSON.stringify(globalTimer, replacer));}
 }
 
 setInterval(()=>{
 	for (i in globalTimer){
-		if (globalTimer[i].timestamp + globalDelay <= new Date().getTime()){
-			globalTimer[i].cb()
-			console.log(globalTimer[i].name)
-			gtc.pop(i)
+		if (globalTimer[i].timestamp + globalTimer[i].delay <= new Date().getTime()){
+			globalTimer[i].cb(globalTimer[i].data)
+			gtc.remove(i)
 		}
 	}
 }, 1000);
