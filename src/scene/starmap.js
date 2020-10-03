@@ -14,25 +14,13 @@ var SceneStarmap = new Phaser.Class({
 		
 	},
 
-	var timeString;
-	var timeText;
-
-	create: function ()
-	{
-		var style = { fill : "#FFFFFF" };
-	    timeText = game.add.text(200, 200, timeString, style);
-
-	    var timer = game.time.create();
-	    timer.repeat(1 * Phaser.Timer.SECOND, 7200, updateTime, this);
-	    timer.start();)
-	}
-
-	function updateTime() {
+	updateTime: function () {
 	    var time = new Date();
 	    
+	    var ms = time.getTime();
 	    var hours = time.getHours();
 	    var minutes = time.getMinutes();
-	    var seconds = time.getSeconds();
+	    var seconds = time.getUTCSeconds();
 	    
 	    if (hours < 10) {
 	        hours = "0" + hours;
@@ -45,7 +33,28 @@ var SceneStarmap = new Phaser.Class({
 	    }
 	    
 	    timeString = hours + ":" + minutes + ":" + seconds;
-	    timeText.text = timeString;
-	}
+	    console.log(ms);
+	    //timeText.setText(timeText);
+	},
+
+	create: function ()
+	{
+		var timeString;
+		var style = { fill : "#FFFFFF" };
+	    var timeText = this.add.text(200, 200, timeString, style);
+
+	    var timer = this.time.addEvent({
+		    delay: 1000,                // ms
+		    callback: this.updateTime,
+		    //args: [],
+		    callbackScope: this,
+		    loop: true
+		});
+
+	    // var timer = this.time.create();
+	    // timer.repeat(1 * Phaser.Timer.SECOND, 7200, updateTime, this);
+	    // timer.start();
+	},	
+
 
 });
