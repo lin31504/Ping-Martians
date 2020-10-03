@@ -134,6 +134,8 @@ var SceneStarmap = new Phaser.Class({
 		this.load.image('mars', 'assets/mars.webp');
 		this.load.image('earth', 'assets/earth.png');
 		this.load.image('base', 'assets/base.png');
+		this.load.image('cross', 'assets/cross.png');
+
 	},
 
 	create: function ()
@@ -177,6 +179,8 @@ var SceneStarmap = new Phaser.Class({
 	    var distanceString = "E-M Distance: " + StarmapDATA.EMdistance + " AU";
 		distanceText = this.add.text(screenButtomX, screenButtomY+50, distanceString, style).setOrigin(0.5);	    
 
+		var btnExit = this.add.image(1200, 100, 'cross');
+
 		//print sun
 	    StarmapDATA.sun.x = screenCenterX;
 	    StarmapDATA.sun.y = screenCenterY;
@@ -197,6 +201,12 @@ var SceneStarmap = new Phaser.Class({
 	   	StarmapDATA.base.y = StarmapDATA.mars.y + StarmapDATA.base.r * StarmapDATA.au2screen * Math.sin(epoch2rad(epochms,StarmapDATA.base.angvel));
 	   	StarmapDATA.base.obj = this.add.sprite(StarmapDATA.base.x, StarmapDATA.base.y, 'base');
 	   	StarmapDATA.base.obj.setScale(0.07,0.07);
+
+
+		btnExit.on('pointerdown', function (event) {
+			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
+		}, this);
+		btnExit.setInteractive({ cursor: 'pointer' })
 
 	    // var timer = this.time.create();
 	    // timer.repeat(1 * Phaser.Timer.SECOND, 7200, updateTime, this);
@@ -256,7 +266,7 @@ var SceneStarmap = new Phaser.Class({
 	    // console.log(StarmapDATA.earth.obj.angle);
 	    // console.log(callbackcRemainTime());
 	    // console.log(angleofpoints(StarmapDATA.sun,StarmapDATA.mars,StarmapDATA.earth));
-	    console.log(angleofpoints(StarmapDATA.mars,StarmapDATA.earth,StarmapDATA.base));
+	    // console.log(angleofpoints(StarmapDATA.mars,StarmapDATA.earth,StarmapDATA.base));
 	    // var remainAngle = Math.angle.Between(0,1,1,0);
 	    // var sprite = game.add.sprite(0, 1);
      //    var sprite2 = game.add.sprite(1, 0);

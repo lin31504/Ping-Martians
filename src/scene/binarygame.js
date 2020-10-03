@@ -36,8 +36,7 @@ var SceneBinaryGame = new Phaser.Class({
 		
 		if (localStorage.getItem("inputVal") == null){
 			inputVal = "> ";	//first played, init
-		}
-		else{
+		}else{
 			var inputVal = localStorage.getItem("inputVal");
 		}
 
@@ -71,12 +70,10 @@ var SceneBinaryGame = new Phaser.Class({
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
 		btnS.on('pointerdown', function (event) {
-			gtc.add('gameA', 10000, inputVal, function(data){if(data == "> 011"){console.log('success');}else{console.log('fail');}})
-
-			systemLogText.setText("");
-			for(obj of gtc.list()){
-				var ETA = Math.round((obj.timestamp + obj.delay - new Date().getTime())/1000);
-				systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
+			if (CalcRemainTime() != 0){
+				gtc.add('gameA', CalcRemainTime()*1000, inputVal, function(data){if(data == "> 011"){console.log('success');}else{console.log('fail');}})
+			}else{
+				gtc.add('gameA',10000, "Transmission failed: connection lost", function(data){})
 			}
 
 			inputVal = "> ";
@@ -95,7 +92,12 @@ var SceneBinaryGame = new Phaser.Class({
 		systemLogText.setText("");
 		for(obj of gtc.list()){
 			var ETA = Math.round((obj.timestamp + obj.delay - new Date().getTime())/1000);
-			systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
+			if(obj.data =="Transmission failed: connection lost"){
+				systemLogText.setText(systemLogText.text+obj.data+"\n");
+			}else{
+				systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
+			}
+
 		}
 	}
 
