@@ -79,10 +79,14 @@ var CalcRemainTime = () => {
 
    	StarmapDATA.sun.obj.angle = (-1)*(epochms - StarmapDATA.epochStart) * StarmapDATA.sun.spinRate * StarmapDATA.planet_timescale; //counter clock wise
 
-   	StarmapDATA.EMdistance = Phaser.Math.Distance.BetweenPoints(StarmapDATA.earth.obj,StarmapDATA.mars.obj);
+   	StarmapDATA.EMdistance = distanceofpoints(StarmapDATA.earth,StarmapDATA.mars);
    	StarmapDATA.EMdistance = Math.round(StarmapDATA.EMdistance*100 / StarmapDATA.au2screen)/100;
 
 	return 2*StarmapDATA.EMdistance * StarmapDATA.au2lightsec;
+};
+
+var distanceofpoints = (objA,objB) => {
+	return Math.sqrt((objA.x-objB.x)*(objA.x-objB.x)+(objA.y-objB.y)*(objA.y-objB.y))
 };
 
 var epoch2rad = (epochtime,angvel) => {
