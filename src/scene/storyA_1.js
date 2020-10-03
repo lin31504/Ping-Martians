@@ -11,7 +11,7 @@ var SceneStoryA1 = new Phaser.Class({
 
 	preload: function ()
 	{
-		this.load.image('bg_StoryA1', 'assets/bg_StoryA1.png');
+		this.load.image('bg_StoryA1', 'assets/bg_storyA1.png');
 		this.load.image('fs_app', 'assets/fs_app.png');
 		this.load.image('mb_app', 'assets/mb_app.png');
 		this.load.image('ob_app', 'assets/ob_app.png');
