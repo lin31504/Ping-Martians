@@ -9,7 +9,7 @@ var config = {
 			gravity: { y: 200 }
 		}
 	},
-	scene: [SceneWelcome, SceneWelcomeVideo]
+	scene: [SceneWelcome, SceneWelcomeVideo, SceneBinaryGame]
 };
 
 var game = new Phaser.Game(config);
