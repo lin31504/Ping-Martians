@@ -32,29 +32,39 @@ var SceneBinaryGame = new Phaser.Class({
 		var btn1 = this.add.image(750, 250, 'button1').setScale(0.5);
 		var btnC = this.add.image(1150, 700, 'buttonClear').setScale(0.3);
 		var btnS = this.add.image(1200, 700, 'buttonSend').setScale(0.3);
-		var Text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
+		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
+		var systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
+		for(obj of sentMSG){
+			systemLogText.setText(systemLogText.text+obj.MSG+"\t\tETA: "+obj.ETA+"\n");
+		}
 
 		btn0.on('pointerdown', function (event) {
             inputVal += "0";
-			Text2Send.setText(inputVal);
+			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
         btn1.on('pointerdown', function (event) {
 			inputVal += "1";
-			Text2Send.setText(inputVal);
+			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
 		btnC.on('pointerdown', function (event) {
 			inputVal = "> ";
-			Text2Send.setText(inputVal);
+			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
 		btnS.on('pointerdown', function (event) {
 			sentMSG.push({MSG:inputVal, ETA:2000});
 			localStorage.setItem("sentMSG", JSON.stringify(sentMSG));
 
+			systemLogText.setText("");
+			var obj;
+			for(obj of sentMSG){
+				systemLogText.setText(systemLogText.text+obj.MSG+"\t\tETA: "+obj.ETA+"\n");
+			}
+
 			inputVal = "> ";
-			Text2Send.setText(inputVal);
+			text2Send.setText(inputVal);
 			localStorage.setItem("inputVal", inputVal);
 		}, this);
 		btn0.setInteractive({ cursor: 'pointer' })
