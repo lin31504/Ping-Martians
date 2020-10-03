@@ -1,4 +1,5 @@
 var systemLogText;
+var transmitTimeText;
 
 var SceneBinaryGame = new Phaser.Class({
 
@@ -32,7 +33,7 @@ var SceneBinaryGame = new Phaser.Class({
 		    loop: true
 		});
 
-		var bbg_gameAgg = this.add.image(0, 0, 'bg_gameA').setOrigin(0).setScale(0.711);
+		var bg_gameA = this.add.image(0, 0, 'bg_gameA').setOrigin(0).setScale(0.711);
 		
 		if (localStorage.getItem("inputVal") == null){
 			inputVal = "> ";	//first played, init
@@ -48,7 +49,7 @@ var SceneBinaryGame = new Phaser.Class({
 
 		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
 		systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
-
+		transmitTimeText = this.add.text(600, 700, "Estimated reply time:",{'fontSize': '12px', 'color': '#000'}).setOrigin(0, 0);
 		// event handles
 		btnExit.on('pointerdown', function (event) {
 			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
@@ -73,7 +74,7 @@ var SceneBinaryGame = new Phaser.Class({
 			if (CalcRemainTime() != 0){
 				gtc.add('gameA', CalcRemainTime()*1000, inputVal, function(data){if(data == "> 011"){console.log('success');}else{console.log('fail');}})
 			}else{
-				gtc.add('gameA',10000, "Transmission failed: connection lost", function(data){})
+				gtc.add('gameA',10000, "Transmission failed: connection lost\n(Earth out of sight)", function(data){})
 			}
 
 			inputVal = "> ";
@@ -92,12 +93,17 @@ var SceneBinaryGame = new Phaser.Class({
 		systemLogText.setText("");
 		for(obj of gtc.list()){
 			var ETA = Math.round((obj.timestamp + obj.delay - new Date().getTime())/1000);
-			if(obj.data =="Transmission failed: connection lost"){
+			if(obj.data =="Transmission failed: connection lost\n(Earth out of sight)"){
 				systemLogText.setText(systemLogText.text+obj.data+"\n");
 			}else{
 				systemLogText.setText(systemLogText.text+obj.data+"\t\tETA: "+ETA+"sec\n");
-			}
+			}			
+		}
 
+		if (CalcRemainTime() != 0){
+			transmitTimeText.setText("Estimated reply time: " + Math.floor(CalcRemainTime())+" sec")
+		}else{
+			transmitTimeText.setText("No Connection")
 		}
 	}
 
