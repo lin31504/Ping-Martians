@@ -193,12 +193,12 @@ var SceneStarmap = new Phaser.Class({
 	    timeText.setText(timeString);
 	    // console.log(StarmapDATA.earth.obj.angle);
 
-	    var remainAngle = Math.angle.Between(0,1,1,0);
+	    // var remainAngle = Math.angle.Between(0,1,1,0);
 	    // var sprite = game.add.sprite(0, 1);
      //    var sprite2 = game.add.sprite(1, 0);
  
-        remainAngle = new Phaser.Point(sprite.x, sprite.y).angle(sprite2) / Math.PI * 180;
-	    console.log(remainAngle);
+     //    remainAngle = new Phaser.Point(sprite.x, sprite.y).angle(sprite2) / Math.PI * 180;
+	    // console.log(remainAngle);
 	    // console.log(epochsec);
 	    // console.log(StarmapDATA.sunx);
 	},
