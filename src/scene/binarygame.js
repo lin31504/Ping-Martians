@@ -17,8 +17,6 @@ var SceneBinaryGame = new Phaser.Class({
 		this.load.image('bg_gameA', 'assets/bg_gameA.png');
 		this.load.image('button0', 'assets/button0.png');
 		this.load.image('button1', 'assets/button1.png');
-		this.load.image('buttonClear', 'assets/button_clear.png');
-		this.load.image('buttonSend', 'assets/button_send.png');
 	},
 
 	create: function ()
@@ -26,7 +24,7 @@ var SceneBinaryGame = new Phaser.Class({
 
 		//Setting Update Timer
 	    var timer = this.time.addEvent({
-		    delay: 500,                // ms
+		    delay: 200,                // ms
 		    callback: this.updateSystemLog,
 		    //args: [],
 		    callbackScope: this,
@@ -41,15 +39,15 @@ var SceneBinaryGame = new Phaser.Class({
 			var inputVal = localStorage.getItem("inputVal");
 		}
 
-		var btnExit = this.add.rectangle(1280, 55, 20, 20, 0xff0000, 0.5);
-		var btn0 = this.add.image(650, 250, 'button0').setScale(0.5);
-		var btn1 = this.add.image(750, 250, 'button1').setScale(0.5);
-		var btnC = this.add.image(1150, 700, 'buttonClear').setScale(0.3);
-		var btnS = this.add.image(1200, 700, 'buttonSend').setScale(0.3);
+		var btnExit = this.add.rectangle(1280, 60, 20, 20, 0xff0000, 0);
+		var btn0 = this.add.image(670, 230, 'button0').setScale(0.8);
+		var btn1 = this.add.image(770, 230, 'button1').setScale(0.8);
+		var btnC = this.add.rectangle(890, 720, 80, 40, 0xff0000, 0);
+		var btnS = this.add.rectangle(1210, 720, 80, 40, 0xff0000, 0);
 
-		var text2Send = this.add.text(875, 680, inputVal,{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'});
-		systemLogText = this.add.text(875, 400, "",{'backgroundColor':'#0f0', 'fontSize': '16px', 'color': '#00f'}).setOrigin(0, 0);
-		transmitTimeText = this.add.text(600, 700, "Estimated reply time:",{'fontSize': '12px', 'color': '#000'}).setOrigin(0, 0);
+		var text2Send = this.add.text(875, 670, inputVal,{'fontSize': '16px', 'color': '#fff'});
+		systemLogText = this.add.text(875, 200, "",{'fontSize': '16px', 'color': '#fff'}).setOrigin(0, 0);
+		transmitTimeText = this.add.text(860, 170, "Estimated reply time:",{'fontSize': '12px', 'color': '#fff'}).setOrigin(0, 0);
 		// event handles
 		btnExit.on('pointerdown', function (event) {
 			this.scene.transition({ target: 'sceneStoryA1', duration: 0});
