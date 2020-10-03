@@ -19,7 +19,7 @@ var SceneWelcome = new Phaser.Class({
 	create: function ()
 	{
 		var bg = this.add.image(0, 0, 'bg').setOrigin(0).setScale(0.711);
-		var logo = this.add.image(700, 350, 'logo');
+		var logo = this.add.image(700, 350, 'logo').setScale(0.7);
 		var hint = this.add.image(900, 600, 'hint');
 		var btn = this.add.rectangle(680, 620, 180, 200, 0xff0000, 0.0);
 		hint.setAlpha(0)
