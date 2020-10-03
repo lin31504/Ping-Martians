@@ -12,14 +12,17 @@ var SceneStoryA1 = new Phaser.Class({
 	preload: function ()
 	{
 		this.load.image('bg_StoryA1', 'assets/bg_StoryA1.png');
+		this.load.image('fs_app', 'assets/fs_app.png');
+		this.load.image('laptop', 'assets/laptop.png');
+		this.load.image('cactus', 'assets/cactus.png');
 	},
 
 	create: function ()
 	{
 		var bg_StoryA1 = this.add.image(0, 0, 'bg_StoryA1').setOrigin(0).setScale(0.711);
-		var feedbackSys = this.add.rectangle(420, 410, 100, 100, 0xff0000, 0.5);
-		var machine2 = this.add.rectangle(350, 670, 250, 120, 0xff0000, 0.5);
-		var machine3 = this.add.rectangle(1230, 640, 150, 200, 0xff0000, 0.5);
+		var feedbackSys = this.add.image(420, 410, 'fs_app').setScale(0.7);
+		var machine2 = this.add.image(350, 670, 'laptop').setScale(0.7);
+		var machine3 = this.add.image(1230, 640, 'cactus').setScale(0.7);
 
 		feedbackSys.on('pointerdown', function (event) {
            this.scene.transition({ target: 'sceneBinaryGame', duration: 0});
